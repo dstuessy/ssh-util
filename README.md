@@ -30,7 +30,7 @@ It also allows for a remote folder to be set. Once logged in, the script will ex
 
 There are two things: the main script "sshutil"; the config file "<name and path of choice>". The config file can be placed anywhere, as its path must be specified under the variable FILENAME in the "sshutil" script. 
 
-The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, USE_PASS or USE_KEY, PROMPT, and REMOTEDIR. 
+The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
 
 These can be specified with the following syntax:
 
