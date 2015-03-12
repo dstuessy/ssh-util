@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILENAME='/path/to/config'
+FILENAME=$HOME'/.sshutil/config'
 FIRST_ARG=$1
 SECOND_ARG=$2
 THIRD_ARG=$3
@@ -131,7 +131,6 @@ function connect {
 	if [ $ALIASFOUND = true ]; then
 		# EXECUTE EXPECT COMMAND
 		expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- \"$PASS\r\"; expect -re {.*$PROMPT.*}; send -- \"cd $REMOTEDIR\r\"; interact;" 
-		#/usr/bin/expect -c 'expect "\n" { eval spawn ssh }'
 	fi
 }
 
@@ -140,22 +139,19 @@ function copy {
 	echo 'copy'
 	echo ""
 
-	expect_cmd="spawn scp -r "
+	COPY_CMD="spawn scp -r "
 
 	setConfig $ALIAS
 	FIRST_PATH=$USER'@'$HOST':'$REMOTEDIR''$EXTRA_PATH
-	FIRST_EXPECT=$EXPECT
-	FIRST_PASSWORD=$PASSWORD
+	FIRST_PASSWORD=$PASS
 
 	setConfig $SECOND_ALIAS
 	SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
-	SECOND_EXPECT=$EXPECT
-	SECOND_PASSWORD=$PASSWORD
+	SECOND_PASSWORD=$PASS
 
 	echo ""
-	echo $expect_cmd
-	expect -c "$expect_cmd $FIRST_PATH $SECOND_PATH; expect \"$FIRST_EXPECT\"; send \"$FIRST_PASSWORD\r\"; expect \"$SECOND_EXPECT\"; send \"$SECOND_PASSWORD\r\""
-	#expect -c "spawn \"scp -r $FIRST_PATH $SECOND_PATH; expect \"$EXPECT\"; send \"$PASSWORD\r\";"
+	echo $COPY_CMD
+	expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- \"$FIRST_PASSWORD\r\"; expect -re {.*assword.*|.*assphrase.*}; send -- \"$SECOND_PASSWORD\r\""
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
