@@ -15,17 +15,30 @@ if [[ $FIRST_ARG != '-c' ]]; then
 	ALIAS=$FIRST_ARG
 	CMD='connect'
 else 
-	ALIAS=$SECOND_ARG
-	SECOND_ALIAS=$THIRD_ARG
+	OIFS=$IFS
+	IFS=':'
+
+	read -a arr <<< "${SECOND_ARG}"
+	read -a arr2 <<< "${THIRD_ARG}"
+
+	IFS=$OIFS
+
+	# SET FIRST ALIAS AND PATH
+	ALIAS=${arr[0]}
+	EXTRA_PATH=${arr[1]}
+	
+	# SET SECOND ALIAS AND PATH
+	SECOND_ALIAS=${arr2[0]}
+	SECOND_EXTRA_PATH=${arr2[1]}
+
+	# SET COMMAND TYPE
 	CMD='copy'
 fi
 
 # DEFINE ALL PROPERTIES
 USER=''
 HOST=''
-EXPECT=''
-USE_PASS=''
-USE_KEY=''
+PASS=''
 PROMPT=''
 REMOTEDIR='~/'
 
@@ -38,9 +51,7 @@ function setConfig {
 	# RESET ALL PROPERTIES TO DEFAULT
 	USER=''
 	HOST=''
-	EXPECT=''
-	USE_PASS=''
-	USE_KEY=''
+	PASS=''
 	PROMPT=''
 	REMOTEDIR='~/'
 
@@ -73,9 +84,8 @@ function setConfig {
 			if [[ $property == 'HOST' ]]; then
 				HOST=$value
 			fi
-			if [[ $property == 'USE_PASS' ]]; then
-				USE_PASS=$value
-				EXPECT="*assword*"
+			if [[ $property == 'PASS' ]]; then
+				PASS=$value
 			fi
 			if [[ $property == 'USE_KEY' ]]; then
 				USE_KEY=$value
@@ -95,16 +105,12 @@ function setConfig {
 		fi
 	done < $FILENAME
 
-		# GET PASSWORD 
-		if [[ $USE_PASS == 'true' ]]; then
-			echo -n "Please enter your password: "
-			read -s PASSWORD
-		fi
-		# GET PASSPHRASE 
-		if [[ $USE_KEY == 'true' ]]; then
-			echo -n "Please enter your key passphrase: "
-			read -s PASSWORD
-		fi
+	# GET PASSWORD 
+	if [[ $PASS == '' ]]; then
+		echo -n "Please enter your password: "
+		read -s PASS
+		echo ""
+	fi
 
 	# ECHO ALIAS NOT FOUND
 	if [ $ALIASFOUND = false ]; then
@@ -124,7 +130,7 @@ function connect {
 
 	if [ $ALIASFOUND = true ]; then
 		# EXECUTE EXPECT COMMAND
-		expect -c "spawn ssh $USER@$HOST; expect \"$EXPECT\"; send \"$PASSWORD\r\"; expect \"*$PROMPT*\"; send \"cd $REMOTEDIR\r\"; interact;" 
+		expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- \"$PASS\r\"; expect -re {.*$PROMPT.*}; send -- \"cd $REMOTEDIR\r\"; interact;" 
 		#/usr/bin/expect -c 'expect "\n" { eval spawn ssh }'
 	fi
 }
@@ -132,24 +138,24 @@ function connect {
 function copy {
 
 	echo 'copy'
+	echo ""
 
 	expect_cmd="spawn scp -r "
 
 	setConfig $ALIAS
-	FIRST_PATH=$USER'@'$HOST':'$REMOTEDIR
+	FIRST_PATH=$USER'@'$HOST':'$REMOTEDIR''$EXTRA_PATH
 	FIRST_EXPECT=$EXPECT
 	FIRST_PASSWORD=$PASSWORD
 
 	setConfig $SECOND_ALIAS
-	SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR
+	SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
 	SECOND_EXPECT=$EXPECT
 	SECOND_PASSWORD=$PASSWORD
 
-	expect_cmd=$expect_cmd' '$FIRST_PATH' '$SECOND_PATH
-
 	echo ""
 	echo $expect_cmd
-	#expect -c "spawn scp -r $FIRST_PATH $SECOND_PATH; expect \"$EXPECT\"; send \"$PASSWORD\r\";"
+	expect -c "$expect_cmd $FIRST_PATH $SECOND_PATH; expect \"$FIRST_EXPECT\"; send \"$FIRST_PASSWORD\r\"; expect \"$SECOND_EXPECT\"; send \"$SECOND_PASSWORD\r\""
+	#expect -c "spawn \"scp -r $FIRST_PATH $SECOND_PATH; expect \"$EXPECT\"; send \"$PASSWORD\r\";"
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
