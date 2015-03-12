@@ -38,22 +38,20 @@ These can be specified with the following syntax:
 ALIAS myserver 
 USER myusername 
 HOST myhost
-USE_PASS true
-USE_KEY true
+PASS apassword
 PROMPT mybashcliprompt
 REMOTEDIR myremotedirectory
 
 ALIAS my-website
 USER mike
 HOST 192.168.0.1
-USE_PASS true
 PROMPT mike-laptop$
 REMOTEDIR /var/www/
 
 ALIAS my-safe
 USER alan 
 HOST 195.62.0.40
-USE_KEY true
+PASS so-insecure-to-leave/passwords-unencrypted-in-a-file
 PROMPT alan@mike-server$
 REMOTEDIR /home/alan/stash/
 ~~~~
@@ -61,10 +59,8 @@ REMOTEDIR /home/alan/stash/
 * **ALIAS** -- the arbitrary name of the configuration.
 * **USER** -- the usernamer to use for remote login.
 * **HOST** -- the domain for the server.
-* **USE_PASS** or **USE_KEY** -- specify if the ssh connection will require a password or keyphrase.
+* **PASS** -- the password used for the key passphrase or server password.
 * **PROMPT** -- the characters for the script to identify that the user has logged in.
 * **REMOTEDIR** -- the remote directory to which the script should navigate.
 
 **Note:** The above example contains identical formatting with a practical version. Each configuration should be separated by a new line, and HAS to start with ALIAS as the property/key on its first line. Otherwise the script will skip to the next set of config properties. 
-
-It should also be noted that USE_PASS and USE_KEY can be placed in the config properties, but the script will use the properties of the one that is furthest down, i.e. if USE_PASS is below USE_KEY, the script will asume SSH is going to request a password, not a key passphrase.
