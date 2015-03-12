@@ -130,7 +130,7 @@ function connect {
 
 	if [ $ALIASFOUND = true ]; then
 		# EXECUTE EXPECT COMMAND
-		expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- \"$PASS\r\"; expect -re {.*$PROMPT.*}; send -- \"cd $REMOTEDIR\r\"; interact;" 
+		expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- {$PASS}; send -- \"\r\"; expect -re {.*$PROMPT.*}; send -- {cd $REMOTEDIR}; send -- \"\r\"; interact;" 
 	fi
 }
 
@@ -151,7 +151,7 @@ function copy {
 
 	echo ""
 	echo $COPY_CMD
-	expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- \"$FIRST_PASSWORD\r\"; expect -re {.*assword.*|.*assphrase.*}; send -- \"$SECOND_PASSWORD\r\""
+	expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\";"
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
