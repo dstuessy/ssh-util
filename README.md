@@ -69,7 +69,7 @@ REMOTEDIR /home/alan/stash/
 
 **Execute Command**
 ~~~~
-/path/to/script.sh <alias of choice>
+/path/to/sshutil.sh myServer
 ~~~~
 ~~~~
 sshutil myServer
