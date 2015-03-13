@@ -36,6 +36,9 @@ The contents of the config file are retrieved to define specified variables: ALI
 ~~~~
 /path/to/script.sh <alias of choice>
 ~~~~
+~~~~
+sshutil myServer
+~~~~
 
 These can be specified with the following syntax:
 
