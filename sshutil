@@ -151,6 +151,8 @@ function copy {
 
 	echo ""
 	echo $COPY_CMD
+	echo $FIRST_PASSWORD
+	echo $SECOND_PASSWORD
 	expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\";"
 }
 

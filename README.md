@@ -32,6 +32,11 @@ There are two things: the main script "sshutil"; the config file "$HOME/.sshutil
 
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
 
+**Execute Command**
+~~~~
+/path/to/script.sh <alias of choice>
+~~~~
+
 These can be specified with the following syntax:
 
 ~~~~
