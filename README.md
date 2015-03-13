@@ -71,6 +71,3 @@ REMOTEDIR /home/alan/stash/
 ~~~~
 /path/to/sshutil.sh myServer
 ~~~~
-~~~~
-sshutil myServer
-~~~~
