@@ -8,6 +8,7 @@
 * Bash -- obviously.
 * SSH -- obviously.
 * Expect.
+* Scp.
 
 Expect script can be found as a supported package in many Linux distributions: https://packages.debian.org/sid/expect and https://www.archlinux.org/packages/extra/i686/expect/
 
