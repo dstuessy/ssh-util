@@ -32,14 +32,6 @@ There are two things: the main script "sshutil"; the config file "$HOME/.sshutil
 
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
 
-**Execute Command**
-~~~~
-/path/to/script.sh <alias of choice>
-~~~~
-~~~~
-sshutil myServer
-~~~~
-
 These can be specified with the following syntax:
 
 ~~~~
@@ -73,3 +65,11 @@ REMOTEDIR /home/alan/stash/
 
 **Note:** The above example contains identical formatting with a practical version. Each configuration should be separated by a new line, and HAS to start with ALIAS as the property/key on its first line. Otherwise the script will skip to the next set of config properties. 
 **Note:** For security purposes, the PASS value can be omitted. The script will then ask for one when executed.
+
+**Execute Command**
+~~~~
+/path/to/script.sh <alias of choice>
+~~~~
+~~~~
+sshutil myServer
+~~~~
