@@ -28,7 +28,7 @@ It uses an expect script command to automate the process of login, and the initi
 
 It also allows for a remote folder to be set. Once logged in, the script will execute a "cd <path of choice>" command to so you can have pre-set remote directories which you can access via an arbitrary alias.
 
-There are two things: the main script "sshutil"; the config file "<name and path of choice>". The config file can be placed anywhere, as its path must be specified under the variable FILENAME in the "sshutil" script. 
+There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
 
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
 
