@@ -1,7 +1,7 @@
 # ssh-util
 
 ### ToDo
-* copy and paste filesystem entries relative to the specified remote dir and the current local dir.
+* Feature: copy and paste filesystem entries relative to the specified remote dir and the current local dir.
 
 ### Requirements
 
