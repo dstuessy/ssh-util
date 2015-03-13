@@ -60,7 +60,7 @@ REMOTEDIR /home/alan/stash/
 * **USER** -- the usernamer to use for remote login.
 * **HOST** -- the domain for the server.
 * **PASS** -- the password used for the key passphrase or server password (OPTIONAL).
-* **PROMPT** -- the characters for the script to identify that the user has logged in.
+* **PROMPT** -- the regular expression for the script to identify that the user has logged in (OPTIONAL). Default value is "\$\s*"
 * **REMOTEDIR** -- the remote directory to which the script should navigate.
 
 **Note:** The above example contains identical formatting with a practical version. Each configuration should be separated by a new line, and HAS to start with ALIAS as the property/key on its first line. Otherwise the script will skip to the next set of config properties. 

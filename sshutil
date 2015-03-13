@@ -39,7 +39,7 @@ fi
 USER=''
 HOST=''
 PASS=''
-PROMPT='$'
+PROMPT='\$\s*' # is regexp
 REMOTEDIR='~/'
 
 # FIND AND SET PROPERTIES ABOVE 
@@ -52,8 +52,8 @@ function setConfig {
 	USER=''
 	HOST=''
 	PASS=''
-	PROMPT=''
-	REMOTEDIR='~/'
+	PROMPT=$PROMPT
+	REMOTEDIR=$REMOTEDIR
 
 	# SEARCH FOR ALIAS AND PROPERTIES
 	while read -r line
