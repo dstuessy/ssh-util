@@ -30,6 +30,7 @@ It also allows for a remote folder to be set. Once logged in, the script will ex
 
 There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
 
+### Setup
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
 
 These can be specified with the following syntax:
