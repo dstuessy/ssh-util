@@ -32,7 +32,7 @@ There are two things: the main script "sshutil"; the config file "$HOME/.sshutil
 
 ### Execute Command
 ~~~~
-/path/to/sshutil.sh myServer
+/path/to/sshutil myServer
 ~~~~
 
 ### Setup
