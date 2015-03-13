@@ -3,6 +3,14 @@
 ### ToDo
 * Feature: copy and paste filesystem entries relative to the specified remote dir and the current local dir.
 
+### What is it?
+A simple bash script that allows you to automate your ssh connections through aliases. 
+It uses an expect script command to automate the process of login, and the initial navigation to the desired directory on the server.
+
+It also allows for a remote folder to be set. Once logged in, the script will execute a "cd <path of choice>" command to so you can have pre-set remote directories which you can access via an arbitrary alias.
+
+There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
+
 ### Requirements
 
 * Bash -- obviously.
@@ -22,14 +30,6 @@ sudo pacman -S expect
 ~~~~
 
 The above two commands have not been tested, please revise your distribution's package manager to see which package to install. 
-
-### What is it?
-A simple bash script that allows you to automate your ssh connections through aliases. 
-It uses an expect script command to automate the process of login, and the initial navigation to the desired directory on the server.
-
-It also allows for a remote folder to be set. Once logged in, the script will execute a "cd <path of choice>" command to so you can have pre-set remote directories which you can access via an arbitrary alias.
-
-There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
 
 ### Execute Command
 ~~~~
