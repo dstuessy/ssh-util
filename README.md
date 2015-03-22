@@ -1,6 +1,6 @@
 # ssh-util
 
-### ToDo
+#### ToDo
 * Feature: copy and paste filesystem entries relative to the specified remote dir and the current local dir.
 
 ### What is it?
@@ -32,8 +32,13 @@ sudo pacman -S expect
 The above two commands have not been tested, please revise your distribution's package manager to see which package to install. 
 
 ### Execute Command
+Connect to alias:
 ~~~~
-/path/to/sshutil myServer
+/path/to/sshutil Alias
+~~~~
+List all aliases:
+~~~~
+/path/to/sshutil -l
 ~~~~
 
 ### Setup
