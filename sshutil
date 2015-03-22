@@ -10,11 +10,8 @@ CMD=''
 
 # SET WHICH COMMAND SHALL BE EXECUTED 
 # BASED ON PARAMETERS ADDED TO COMMAND
-# SET ALIAS
-if [[ $FIRST_ARG != '-c' ]]; then
-	ALIAS=$FIRST_ARG
-	CMD='connect'
-else 
+if [[ $FIRST_ARG == '-c' ]]; then
+
 	OIFS=$IFS
 	IFS=':'
 
@@ -26,13 +23,20 @@ else
 	# SET FIRST ALIAS AND PATH
 	ALIAS=${arr[0]}
 	EXTRA_PATH=${arr[1]}
-	
+
 	# SET SECOND ALIAS AND PATH
 	SECOND_ALIAS=${arr2[0]}
 	SECOND_EXTRA_PATH=${arr2[1]}
 
 	# SET COMMAND TYPE
 	CMD='copy'
+elif [[ $FIRST_ARG == '-l' ]]; then
+
+	CMD='list'
+else 
+
+	ALIAS=$FIRST_ARG
+	CMD='connect'
 fi
 
 # DEFINE ALL PROPERTIES
@@ -46,78 +50,78 @@ REMOTEDIR='~/'
 # BASED ON ALIAS VARIABLE
 function setConfig {
 
-	ALIAS=$1
-	ALIASFOUND=false
-	# RESET ALL PROPERTIES TO DEFAULT
-	USER=''
-	HOST=''
-	PASS=''
-	PROMPT=$PROMPT
-	REMOTEDIR=$REMOTEDIR
+ALIAS=$1
+ALIASFOUND=false
+# RESET ALL PROPERTIES TO DEFAULT
+USER=''
+HOST=''
+PASS=''
+PROMPT=$PROMPT
+REMOTEDIR=$REMOTEDIR
 
-	# SEARCH FOR ALIAS AND PROPERTIES
-	while read -r line
-	do
-		length=${#line}
-		lineArray=($line)
+# SEARCH FOR ALIAS AND PROPERTIES
+while read -r line
+do
+	length=${#line}
+	lineArray=($line)
 
-		property=${lineArray[0]}
-		value=${lineArray[1]}
-		
-		# CHECK FOR ALIAS
-		if [[ $property == 'ALIAS' ]]; then
-			# FIND ALIAS
-			if [[ $value == $ALIAS ]]; then
-				echo $property $value
-				ALIASFOUND=true
-			fi
+	property=${lineArray[0]}
+	value=${lineArray[1]}
+
+	# CHECK FOR ALIAS
+	if [[ $property == 'ALIAS' ]]; then
+		# FIND ALIAS
+		if [[ $value == $ALIAS ]]; then
+			echo $property $value
+			ALIASFOUND=true
 		fi
-
-		# IF ALIAS HAS BEEN FOUND
-		if [ $ALIASFOUND = true ]; then
-
-			# GET ALL PROPERTIES 
-			if [[ $property == 'USER' ]]; then
-				USER=$value
-				echo $USER
-			fi
-			if [[ $property == 'HOST' ]]; then
-				HOST=$value
-			fi
-			if [[ $property == 'PASS' ]]; then
-				PASS=$value
-			fi
-			if [[ $property == 'USE_KEY' ]]; then
-				USE_KEY=$value
-				EXPECT="*phrase*"
-			fi
-			if [[ $property == 'PROMPT' ]]; then
-				PROMPT=$value
-			fi
-			if [[ $property == 'REMOTEDIR' ]]; then
-				REMOTEDIR=$value
-			fi
-
-			# END LOOP
-			if [ $length -eq 0 ]; then
-				break;
-			fi
-		fi
-	done < $FILENAME
-
-	# GET PASSWORD 
-	if [[ $PASS == '' ]]; then
-		echo -n "Please enter your password: "
-		read -s PASS
-		echo ""
 	fi
 
-	# ECHO ALIAS NOT FOUND
-	if [ $ALIASFOUND = false ]; then
-		echo "alias $ALIAS not found"
-	fi
+	# IF ALIAS HAS BEEN FOUND
+	if [ $ALIASFOUND = true ]; then
 
+		# GET ALL PROPERTIES 
+		if [[ $property == 'USER' ]]; then
+			USER=$value
+			echo $USER
+		fi
+		if [[ $property == 'HOST' ]]; then
+			HOST=$value
+		fi
+		if [[ $property == 'PASS' ]]; then
+			PASS=$value
+		fi
+		if [[ $property == 'USE_KEY' ]]; then
+			USE_KEY=$value
+			EXPECT="*phrase*"
+		fi
+		if [[ $property == 'PROMPT' ]]; then
+			PROMPT=$value
+		fi
+		if [[ $property == 'REMOTEDIR' ]]; then
+			REMOTEDIR=$value
+		fi
+
+		# END LOOP
+		if [ $length -eq 0 ]; then
+			break;
+		fi
+	fi
+done < $FILENAME
+
+# GET PASSWORD 
+if [[ $PASS == '' ]]; then
+	echo -n "Please enter your password: "
+	read -s PASS
 	echo ""
+fi
+
+# ECHO ALIAS NOT FOUND
+if [ $ALIASFOUND = false ]; then
+	echo "alias $ALIAS not found"
+fi
+
+echo ""
 }
 
 # Executes script for 
@@ -125,13 +129,13 @@ function setConfig {
 # remote directory
 function connect {
 
-	# SET CONFIG PROPERTIES
-	setConfig $ALIAS
+# SET CONFIG PROPERTIES
+setConfig $ALIAS
 
-	if [ $ALIASFOUND = true ]; then
-		# EXECUTE EXPECT COMMAND
-		expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- {$PASS}; send -- \"\r\"; expect -re {.*$PROMPT.*}; send -- {cd $REMOTEDIR}; send -- \"\r\"; interact;" 
-	fi
+if [ $ALIASFOUND = true ]; then
+	# EXECUTE EXPECT COMMAND
+	expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- {$PASS}; send -- \"\r\"; expect -re {.*$PROMPT.*}; send -- {cd $REMOTEDIR}; send -- \"\r\"; interact;" 
+fi
 }
 
 # Execute script to
@@ -140,36 +144,63 @@ function connect {
 # config settings.
 function copy {
 
-	echo 'copy'
-	echo ""
+echo 'copy'
+echo ""
 
-	COPY_CMD="spawn scp -r"
+COPY_CMD="spawn scp -r"
 
-	setConfig $ALIAS
-	FIRST_LOGIN=$USER'@'$HOST
-	FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
-	FIRST_PASSWORD=$PASS
-	FIRST_PROMPT=$PROMPT
+setConfig $ALIAS
+FIRST_LOGIN=$USER'@'$HOST
+FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
+FIRST_PASSWORD=$PASS
+FIRST_PROMPT=$PROMPT
 
-	setConfig $SECOND_ALIAS
-	SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
-	SECOND_PASSWORD=$PASS
-	SECOND_PROMPT=$PROMPT
+setConfig $SECOND_ALIAS
+SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
+SECOND_PASSWORD=$PASS
+SECOND_PROMPT=$PROMPT
 
-	echo ""
-	echo $COPY_CMD
-	echo $FIRST_PASSWORD
-	echo $SECOND_PASSWORD
-	echo $FIRST_PROMPT
-	echo $SECOND_PROMPT
-	expect -c "spawn ssh $FIRST_LOGIN; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*$FIRST_PROMPT.*}; $COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; expect;"
-	#expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH;  expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; interact;"
+echo ""
+echo $COPY_CMD
+echo $FIRST_PASSWORD
+echo $SECOND_PASSWORD
+echo $FIRST_PROMPT
+echo $SECOND_PROMPT
+expect -c "spawn ssh $FIRST_LOGIN; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*$FIRST_PROMPT.*}; $COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; expect;"
+#expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH;  expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; interact;"
+}
+
+#
+# LIST ALL SET ALIASES
+#
+# Iterates through config file like
+# aforementioned setConfig(), but
+# only echoes an alias when 
+# encountered.
+function list {
+
+while read -r line
+do
+	length=${#line}
+	lineArray=($line)
+
+	property=${lineArray[0]}
+	value=${lineArray[1]}
+
+	# CHECK FOR ALIAS
+	if [[ $property == 'ALIAS' ]]; then
+		echo $value
+	fi
+
+done < $FILENAME
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
 if [[ $CMD == 'connect' ]]; then
 	# EXECUTE EXPECT COMMAND
 	connect
+elif [[ $CMD == 'list' ]]; then
+	list
 elif [[ $CMD == 'copy' ]]; then
 	copy
 fi
