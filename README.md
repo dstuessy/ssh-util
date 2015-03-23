@@ -11,6 +11,16 @@ It also allows for a remote folder to be set. Once logged in, the script will ex
 
 There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
 
+### Execute Command
+Connect to alias:
+~~~~
+/path/to/sshutil Alias
+~~~~
+List all aliases:
+~~~~
+/path/to/sshutil -l
+~~~~
+
 ### Requirements
 
 * Bash -- obviously.
@@ -30,16 +40,6 @@ sudo pacman -S expect
 ~~~~
 
 The above two commands have not been tested, please revise your distribution's package manager to see which package to install. 
-
-### Execute Command
-Connect to alias:
-~~~~
-/path/to/sshutil Alias
-~~~~
-List all aliases:
-~~~~
-/path/to/sshutil -l
-~~~~
 
 ### Setup
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
