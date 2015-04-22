@@ -110,11 +110,11 @@ do
 done < $FILENAME
 
 # GET PASSWORD 
-if [[ $PASS == '' ]]; then
-	echo -n "Please enter your password: "
-	read -s PASS
-	echo ""
-fi
+#if [[ $PASS == '' ]]; then
+	#echo -n "Please enter your password: "
+	#read -s PASS
+	#echo ""
+#fi
 
 # ECHO ALIAS NOT FOUND
 if [ $ALIASFOUND = false ]; then
@@ -134,7 +134,8 @@ setConfig $ALIAS
 
 if [ $ALIASFOUND = true ]; then
 	# EXECUTE EXPECT COMMAND
-	expect -c "spawn ssh $USER@$HOST; expect -re {.*assword.*|.*assphrase.*}; send -- {$PASS}; send -- \"\r\"; expect -re {.*$PROMPT.*}; send -- {cd $REMOTEDIR}; send -- \"\r\"; interact;" 
+	echo $PROMPT
+	./rsync.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
 fi
 }
 

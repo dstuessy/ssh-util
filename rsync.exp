@@ -1,0 +1,49 @@
+#!/usr/bin/expect
+
+exp_internal 0
+
+# Set Variables
+set command [lindex $argv 0]
+set host [lindex $argv 1]
+set prompt [lindex $argv 2]
+set remotedir [lindex $argv 3]
+set password [lindex $argv 4]
+
+send -- "$prompt \n"
+send -- "$remotedir \n"
+send -- "password: $password \n"
+
+spawn $command $host
+
+expect {
+	"*assword*" {
+		if {$password == ""} {
+			interact -o "\r" return
+			exp_continue
+		} else {
+			send -- $password
+			send -- "\n"
+		}
+		exp_continue
+	}
+	"*assphrase*" {
+		if {$password == ""} {
+			interact -o "\r" return
+			exp_continue
+		} else {
+			send -- $password
+			send -- "\n"
+		}
+		exp_continue
+	}
+	"authenticity of host" {
+		interact -o "\r" return
+		exp_continue
+	}
+	$prompt {
+		send -- "$remotedir \n"
+		interact
+	}
+}
+
+exit 0
