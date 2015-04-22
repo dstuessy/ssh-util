@@ -42,7 +42,7 @@ sudo pacman -S expect
 The above two commands have not been tested, please revise your distribution's package manager to see which package to install. 
 
 ### Setup
-The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, EXPECT, PASS, PROMPT, and REMOTEDIR. 
+The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, PASS, PROMPT, and REMOTEDIR. 
 
 These can be specified with the following syntax:
 
