@@ -135,7 +135,7 @@ setConfig $ALIAS
 if [ $ALIASFOUND = true ]; then
 	# EXECUTE EXPECT COMMAND
 	echo $PROMPT
-	./rsync.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
+	./ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
 fi
 }
 
