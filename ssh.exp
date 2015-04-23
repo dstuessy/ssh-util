@@ -9,9 +9,9 @@ set prompt [lindex $argv 2]
 set remotedir [lindex $argv 3]
 set password [lindex $argv 4]
 
-send -- "$prompt \n"
-send -- "$remotedir \n"
-send -- "password: $password \n"
+#send -- "$prompt \n"
+#send -- "$remotedir \n"
+#send -- "password: $password \n"
 
 spawn $command $host
 
@@ -39,6 +39,9 @@ expect {
 	"authenticity of host" {
 		interact -o "\r" return
 		exp_continue
+	}
+	"*ermission denied*" {
+		exit 0
 	}
 	$prompt {
 		send -- "$remotedir \n"

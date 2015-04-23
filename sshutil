@@ -67,6 +67,9 @@ do
 
 	property=${lineArray[0]}
 	value=${lineArray[1]}
+	colNo=${#lineArray[*]}
+
+	#echo ${lineArray[*]:2:$colNo}
 
 	# CHECK FOR ALIAS
 	if [[ $property == 'ALIAS' ]]; then
@@ -89,7 +92,13 @@ do
 			HOST=$value
 		fi
 		if [[ $property == 'PASS' ]]; then
+
 			PASS=$value
+
+			if [ $colNo -gt 2 ]; then
+				PASS=${lineArray[*]:2:$colNo}
+				PASS=$($PASS)
+			fi
 		fi
 		if [[ $property == 'USE_KEY' ]]; then
 			USE_KEY=$value
@@ -133,9 +142,12 @@ function connect {
 setConfig $ALIAS
 
 if [ $ALIASFOUND = true ]; then
+
+	#echo $PROMPT
+	#echo $PASS
+
 	# EXECUTE EXPECT COMMAND
-	echo $PROMPT
-	./ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
+	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
 fi
 }
 
@@ -194,6 +206,18 @@ do
 	fi
 
 done < $FILENAME
+}
+
+#
+# JOIN ALL ARGUMENTS OR ARRAY TO A STRING
+#
+# Takes the splitter as the first argument.
+# Takes array or any other arguments 
+# after the first as array items to join.
+function join {
+local IFS="$1"
+shift
+echo "$*"
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
