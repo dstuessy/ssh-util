@@ -43,6 +43,7 @@ The above two commands have not been tested, please revise your distribution's p
 
 ### Setup
 The contents of the config file are retrieved to define specified variables: ALIAS, USER, HOST, PASS, PROMPT, and REMOTEDIR. 
+**Note:** the PASS variable now supports commands so passwords can be retrieved using a password manager -- see example with alias "my-website".
 
 These can be specified with the following syntax:
 
@@ -57,6 +58,7 @@ REMOTEDIR myremotedirectory
 ALIAS my-website
 USER mike
 HOST 192.168.0.1
+PASS -- pass server/mike
 PROMPT mike-laptop$
 REMOTEDIR /var/www/
 
