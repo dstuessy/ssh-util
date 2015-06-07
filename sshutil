@@ -8,6 +8,42 @@ ALIAS=''
 SECOND_ALIAS=''
 CMD=''
 
+#
+# JOIN ALL ARGUMENTS OR ARRAY TO A STRING
+#
+# Takes the delmiter as the first argument.
+# Takes array or any other arguments 
+# after the first as array items to join.
+function join {
+local IFS="$1"
+shift 1 # removes the first value of the arguments
+echo "$*" # joins all arguments with IFS
+}
+
+# SPLITS ALL ARGUMENTS OR STRING INTO AN ARRAY.
+#
+# Takes the delimiter as the first argument.
+# Takes second or more arguments 
+# as the string to split into an array.
+# Split strings are set as arrays under
+# variable "temp_array".
+function splitString {
+OFS=$IFS
+IFS="$1" # set delimiter for array
+shift 1 # remove the first value of the arguments array
+read -a temp_array <<< "$*" # convert string to array"
+IFS=$OFS
+}
+
+#array=(apples, pears, and\ bananas)
+#echo ${array[@]}
+#splitString ", " ${array[@]}
+#echo ${temp_array[@]}
+#path='/'$(join '/' ${temp_array[@]})'/'
+#echo $path
+#array=$(splitString ", " "apples, pears, and\ bananas")
+
+
 # SET WHICH COMMAND SHALL BE EXECUTED 
 # BASED ON PARAMETERS ADDED TO COMMAND
 if [[ $FIRST_ARG == '-c' ]]; then
@@ -206,18 +242,6 @@ do
 	fi
 
 done < $FILENAME
-}
-
-#
-# JOIN ALL ARGUMENTS OR ARRAY TO A STRING
-#
-# Takes the splitter as the first argument.
-# Takes array or any other arguments 
-# after the first as array items to join.
-function join {
-local IFS="$1"
-shift # removes the first value of the arguments
-echo "$*" # joins all arguments with IFS
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
