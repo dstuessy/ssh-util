@@ -33,17 +33,23 @@ shift 1 # remove the first value of the arguments array
 read -a temp_array <<< "$*" # convert string to array"
 }
 
+function checkRoot {
+if [[ $1 == /* ]]; then echo 1; else echo 0; fi
+}
+
 
 # SET WHICH COMMAND SHALL BE EXECUTED 
 # BASED ON PARAMETERS ADDED TO COMMAND
 if [[ $FIRST_ARG == '-c' ]]; then
 
-	# GET ARRAYS OF 
+	# GET ALIASES AND PATHS FROM ARGUMENTS
 	splitString ':' ${SECOND_ARG}
 	arr=temp_array
 	splitString ':' ${THIRD_ARG}
 	arr2=temp_array
 	
+	echo ${arr[@]}
+	echo ${arr2[@]}
 
 	# SET FIRST ALIAS AND PATH
 	ALIAS=${arr[0]}
@@ -60,7 +66,11 @@ elif [[ $FIRST_ARG == '-l' ]]; then
 	CMD='list'
 else 
 
-	ALIAS=$FIRST_ARG
+	# GET ALIASES AND PATHS FROM ARGUMENTS
+	splitString ':' ${FIRST_ARG}
+
+	ALIAS=${temp_array[0]}
+	EXTRA_PATH=${temp_array[1]}
 	CMD='connect'
 fi
 
@@ -93,8 +103,6 @@ do
 	property=${lineArray[0]}
 	value=${lineArray[1]}
 	colNo=${#lineArray[*]}
-
-	#echo ${lineArray[*]:2:$colNo}
 
 	# CHECK FOR ALIAS
 	if [[ $property == 'ALIAS' ]]; then
@@ -143,13 +151,6 @@ do
 	fi
 done < $FILENAME
 
-# GET PASSWORD 
-#if [[ $PASS == '' ]]; then
-	#echo -n "Please enter your password: "
-	#read -s PASS
-	#echo ""
-#fi
-
 # ECHO ALIAS NOT FOUND
 if [ $ALIASFOUND = false ]; then
 	echo "alias $ALIAS not found"
@@ -168,8 +169,12 @@ setConfig $ALIAS
 
 if [ $ALIASFOUND = true ]; then
 
-	#echo $PROMPT
-	#echo $PASS
+	oldPath=$REMOTEDIR
+
+	splitString '/' "$REMOTEDIR"
+	path=${temp_array[@]}
+	REMOTEDIR=$(join '/' $path $EXTRA_PATH)
+	if [[ $oldPath == /* ]]; then REMOTEDIR='/'$REMOTEDIR; fi
 
 	# EXECUTE EXPECT COMMAND
 	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
