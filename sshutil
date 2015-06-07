@@ -216,8 +216,8 @@ done < $FILENAME
 # after the first as array items to join.
 function join {
 local IFS="$1"
-shift
-echo "$*"
+shift # removes the first value of the arguments
+echo "$*" # joins all arguments with IFS
 }
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER

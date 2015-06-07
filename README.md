@@ -2,6 +2,7 @@
 
 #### ToDo
 * Feature: copy and paste filesystem entries relative to the specified remote dir and the current local dir.
+* Feature: include copying from remote location to remote location.
 
 ### What is it?
 A simple bash script that allows you to automate your ssh connections through aliases. 
