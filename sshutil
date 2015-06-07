@@ -28,33 +28,22 @@ echo "$*" # joins all arguments with IFS
 # Split strings are set as arrays under
 # variable "temp_array".
 function splitString {
-OFS=$IFS
-IFS="$1" # set delimiter for array
+local IFS="$1" # set delimiter for array
 shift 1 # remove the first value of the arguments array
 read -a temp_array <<< "$*" # convert string to array"
-IFS=$OFS
 }
-
-#array=(apples, pears, and\ bananas)
-#echo ${array[@]}
-#splitString ", " ${array[@]}
-#echo ${temp_array[@]}
-#path='/'$(join '/' ${temp_array[@]})'/'
-#echo $path
-#array=$(splitString ", " "apples, pears, and\ bananas")
 
 
 # SET WHICH COMMAND SHALL BE EXECUTED 
 # BASED ON PARAMETERS ADDED TO COMMAND
 if [[ $FIRST_ARG == '-c' ]]; then
 
-	OIFS=$IFS
-	IFS=':'
-
-	read -a arr <<< "${SECOND_ARG}"
-	read -a arr2 <<< "${THIRD_ARG}"
-
-	IFS=$OIFS
+	# GET ARRAYS OF 
+	splitString ':' ${SECOND_ARG}
+	arr=temp_array
+	splitString ':' ${THIRD_ARG}
+	arr2=temp_array
+	
 
 	# SET FIRST ALIAS AND PATH
 	ALIAS=${arr[0]}
