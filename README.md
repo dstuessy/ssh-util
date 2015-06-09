@@ -1,7 +1,6 @@
 # ssh-util
 
 #### ToDo
-* Feature: copy and paste filesystem entries relative to the specified remote dir and the current local dir.
 * Feature: include copying from remote location to remote location.
 
 ### What is it?
