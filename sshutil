@@ -21,20 +21,6 @@ echo "$*" # joins all arguments with IFS
 }
 # join END 
 
-# SPLITS ALL ARGUMENTS OR STRING INTO AN ARRAY.
-#
-# Takes the delimiter as the first argument.
-# Takes second or more arguments 
-# as the string to split into an array.
-# Split strings are set as arrays under
-# variable "temp_array".
-function splitString {
-local IFS="$1" # set delimiter for array
-shift 1 # remove the first value of the arguments array
-read -a temp_array <<< "$*" # convert string to array"
-}
-# splitString END
-
 function checkRootPath {
 if [[ $1 == /* ]]; then echo 1; else echo 0; fi
 }
@@ -46,10 +32,8 @@ if [[ $1 == /* ]]; then echo 1; else echo 0; fi
 if [[ $FIRST_ARG == '-c' ]]; then
 
 	# GET ALIASES AND PATHS FROM ARGUMENTS
-	splitString ':' ${SECOND_ARG}
-	arr=temp_array
-	splitString ':' ${THIRD_ARG}
-	arr2=temp_array
+	arr=(${SECOND_ARG//':'/' '}) # split string to array
+	arr2=(${THIRD_ARG//':'/' '}) # split string to array
 	
 	echo ${arr[@]}
 	echo ${arr2[@]}
@@ -70,10 +54,10 @@ elif [[ $FIRST_ARG == '-l' ]]; then
 else 
 
 	# GET ALIASES AND PATHS FROM ARGUMENTS
-	splitString ':' ${FIRST_ARG}
+	arr=( ${FIRST_ARG//':'/' '} ) # split string to array
 
-	ALIAS=${temp_array[0]}
-	EXTRA_PATH=${temp_array[1]}
+	ALIAS=${arr[0]}
+	EXTRA_PATH=${arr[1]}
 	CMD='connect'
 fi
 # SET WHICH COMMAND TO EXECUTE END
@@ -177,8 +161,7 @@ if [ $ALIASFOUND = true ]; then
 
 	oldPath=$REMOTEDIR
 
-	splitString '/' "$REMOTEDIR"
-	path=${temp_array[@]}
+	path=( ${REMOTEDIR//'/'/' '} ) # split string to array
 	REMOTEDIR=$(join '/' $path $EXTRA_PATH)
 	if [[ $oldPath == /* ]]; then REMOTEDIR='/'$REMOTEDIR; fi
 
