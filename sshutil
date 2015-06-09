@@ -19,6 +19,7 @@ local IFS="$1"
 shift 1 # removes the first value of the arguments
 echo "$*" # joins all arguments with IFS
 }
+# join END 
 
 # SPLITS ALL ARGUMENTS OR STRING INTO AN ARRAY.
 #
@@ -32,10 +33,12 @@ local IFS="$1" # set delimiter for array
 shift 1 # remove the first value of the arguments array
 read -a temp_array <<< "$*" # convert string to array"
 }
+# splitString END
 
-function checkRoot {
+function checkRootPath {
 if [[ $1 == /* ]]; then echo 1; else echo 0; fi
 }
+# checkRootPath END
 
 
 # SET WHICH COMMAND SHALL BE EXECUTED 
@@ -73,6 +76,7 @@ else
 	EXTRA_PATH=${temp_array[1]}
 	CMD='connect'
 fi
+# SET WHICH COMMAND TO EXECUTE END
 
 # DEFINE ALL PROPERTIES
 USER=''
@@ -83,6 +87,7 @@ REMOTEDIR='~/'
 
 # FIND AND SET PROPERTIES ABOVE 
 # BASED ON ALIAS VARIABLE
+#
 function setConfig {
 
 ALIAS=$1
@@ -158,6 +163,7 @@ fi
 
 echo ""
 }
+# setConfig END
 
 # Executes script for 
 # connecting via ssh to the desired
@@ -180,6 +186,7 @@ if [ $ALIASFOUND = true ]; then
 	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
 fi
 }
+# connect END
 
 # Execute script to
 # copy files from one location
@@ -212,6 +219,7 @@ echo $SECOND_PROMPT
 expect -c "spawn ssh $FIRST_LOGIN; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*$FIRST_PROMPT.*}; $COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; expect;"
 #expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH;  expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; interact;"
 }
+# copy END 
 
 #
 # LIST ALL SET ALIASES
@@ -236,7 +244,9 @@ do
 	fi
 
 done < $FILENAME
+
 }
+# list END
 
 # EXECUTE COMMAND BASED ON FIRST PARAMETER
 if [[ $CMD == 'connect' ]]; then

@@ -36,7 +36,7 @@ expect {
 		}
 		exp_continue
 	}
-	"authenticity of host" {
+	"*yes/no*" {
 		interact -o "\r" return
 		exp_continue
 	}
