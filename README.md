@@ -77,5 +77,5 @@ REMOTEDIR /home/alan/stash/
 * **PROMPT** -- the regular expression for the script to identify that the user has logged in (OPTIONAL). Default value is "\$\s*"
 * **REMOTEDIR** -- the remote directory to which the script should navigate.
 
-**Note:** The above example contains identical formatting with a practical version. Each configuration should be separated by a new line, and HAS to start with ALIAS as the property/key on its first line. Otherwise the script will skip to the next set of config properties. 
+**Note:** The above example contains identical formatting with a practical version. Each configuration should be separated by a new line, and has to start with ALIAS as the property/key on its first line. Otherwise the script will skip to the next set of config properties. 
 **Note:** For security purposes, the PASS value can be omitted. The script will then ask for one when prompted.
