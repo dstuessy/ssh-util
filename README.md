@@ -14,11 +14,14 @@ There are two things: the main script "sshutil"; the config file "$HOME/.sshutil
 ### Execute Command
 Connect to alias:
 ~~~~
-/path/to/sshutil Alias
+/path/to/sshutil Alias:path/to/sub/directory
+sshutil myWebServer
+sshutil myWebServer:myBlogDirectory
 ~~~~
 List all aliases:
 ~~~~
 /path/to/sshutil -l
+sshutil -l
 ~~~~
 
 ### Requirements
