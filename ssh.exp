@@ -8,6 +8,8 @@ set host [lindex $argv 1]
 set prompt [lindex $argv 2]
 set remotedir [lindex $argv 3]
 set password [lindex $argv 4]
+set secondCmd [lindex $argv 5]
+set secondPassword [lindex $argv 6]
 
 #send -- "$prompt \n"
 #send -- "$remotedir \n"
@@ -44,8 +46,37 @@ expect {
 		exit 0
 	}
 	$prompt {
-		send -- "$remotedir \n"
-		interact
+		if {$secondCmd == ""} {
+			send -- "$remotedir \n"
+			interact
+		} else {
+			send -- "$secondCmd \n"
+			expect {
+				"*assword*" {
+					if {$secondPassword == ""} {
+						interact -o "/r" return
+						exp_continue
+					} else {
+						send -- $secondPassword
+						send -- "\n"
+					}
+					exp_continue
+				}
+				"*assphrase*" {
+					if {$secondPassword == ""} {
+						interact -o "\r" return
+						exp_continue
+					} else {
+						send -- $secondPassword
+						send -- "\n"
+					}
+					exp_continue
+				}
+				$prompt {
+					exit 0
+				}
+			}
+		}
 	}
 }
 

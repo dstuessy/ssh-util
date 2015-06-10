@@ -156,14 +156,8 @@ setConfig $ALIAS
 
 if [ $ALIASFOUND = true ]; then
 
-	oldPath=$REMOTEDIR
-
-	path=( ${REMOTEDIR//'/'/' '} ) # split string to array
-	REMOTEDIR=$(join '/' $path $EXTRA_PATH)
-	if [[ $oldPath == /* ]]; then REMOTEDIR='/'$REMOTEDIR; fi
-
 	# EXECUTE EXPECT COMMAND
-	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS
+	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT "cd $REMOTEDIR" $PASS
 fi
 }
 # connect END
@@ -181,7 +175,8 @@ echo "---------"
 setConfig $ALIAS
 if [ $ALIASFOUND = true ]; then
 	FIRST_LOGIN=$USER'@'$HOST
-	FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
+	FIRST_REMOTEDIR=$REMOTEDIR
+	FIRST_EXTRA_PATH=$FIRST_REMOTEDIR''$EXTRA_PATH
 	FIRST_PASSWORD=$PASS
 	FIRST_PROMPT=$PROMPT
 	# GET DETAILS OF SECOND ALIAS IF FIRST ONE WAS FOUND
@@ -189,17 +184,10 @@ if [ $ALIASFOUND = true ]; then
 	if [ $ALIASFOUND = true ]; then
 		SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
 		SECOND_PASSWORD=$PASS
-
-		SECOND_CMD="scp -r $FIRST_PATH $SECOND_PATH"
-
-		echo ""
-		echo $SECOND_CMD
-		echo $FIRST_PATH
-		echo $SECOND_PATH
-		echo $SECOND_CMD
+		SECOND_CMD="scp -r $FIRST_EXTRA_PATH $SECOND_PATH"
 
 		# EXECUTE EXPECT COMMAND
-		#$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS $SECOND_CMD
+		$HOME/.sshutil/ssh.exp ssh $FIRST_LOGIN $FIRST_PROMPT "cd $FIRST_REMOTEDIR" $FIRST_PASSWORD "$SECOND_CMD" $SECOND_PASSWORD
 	else
 		echo "Second alias "$ALIAS" not found"
 	fi
