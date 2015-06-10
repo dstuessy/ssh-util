@@ -157,7 +157,7 @@ setConfig $ALIAS
 if [ $ALIASFOUND = true ]; then
 
 	# EXECUTE EXPECT COMMAND
-	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT "cd $REMOTEDIR" $PASS
+	$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT "cd $REMOTEDIR$EXTRA_PATH" $PASS
 fi
 }
 # connect END
