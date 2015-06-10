@@ -180,8 +180,6 @@ echo "---------"
 # GET DETAILS OF FIRST ALIAS
 setConfig $ALIAS
 if [ $ALIASFOUND = true ]; then
-	firstFound=true;
-	SECOND_CMD="scp -r"
 	FIRST_LOGIN=$USER'@'$HOST
 	FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
 	FIRST_PASSWORD=$PASS
@@ -189,14 +187,16 @@ if [ $ALIASFOUND = true ]; then
 	# GET DETAILS OF SECOND ALIAS IF FIRST ONE WAS FOUND
 	setConfig $SECOND_ALIAS
 	if [ $ALIASFOUND = true ]; then
-		secondFound=true;
 		SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
 		SECOND_PASSWORD=$PASS
+
+		SECOND_CMD="scp -r $FIRST_PATH $SECOND_PATH"
 
 		echo ""
 		echo $SECOND_CMD
 		echo $FIRST_PATH
 		echo $SECOND_PATH
+		echo $SECOND_CMD
 
 		# EXECUTE EXPECT COMMAND
 		#$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS $SECOND_CMD
