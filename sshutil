@@ -9,22 +9,19 @@ SECOND_ALIAS=''
 CMD=''
 
 #
-# JOIN ALL ARGUMENTS OR ARRAY TO A STRING
+# JOIN ALL ARGUMENTS TO A STRING
 #
 # Takes the delmiter as the first argument.
-# Takes array or any other arguments 
-# after the first as array items to join.
+# Takes other arguments after the first as array items to join.
 function join {
 local IFS="$1"
-shift 1 # removes the first value of the arguments
-echo "$*" # joins all arguments with IFS
+shift 1 
+echo "$*" 
 }
-# join END 
 
 function checkRootPath {
 if [[ $1 == /* ]]; then echo 1; else echo 0; fi
 }
-# checkRootPath END
 
 
 # SET WHICH COMMAND SHALL BE EXECUTED 
@@ -80,7 +77,7 @@ ALIASFOUND=false
 USER=''
 HOST=''
 PASS=''
-PROMPT=$PROMPT
+PROMPT='\$\s*' # is regexp
 REMOTEDIR=$REMOTEDIR
 
 # SEARCH FOR ALIAS AND PROPERTIES
@@ -178,32 +175,38 @@ fi
 function copy {
 
 echo 'copy'
-echo ""
+echo "---------"
 
-SECOND_CMD="scp -r"
-
+# GET DETAILS OF FIRST ALIAS
 setConfig $ALIAS
-FIRST_LOGIN=$USER'@'$HOST
-FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
-FIRST_PASSWORD=$PASS
-FIRST_PROMPT=$PROMPT
+if [ $ALIASFOUND = true ]; then
+	firstFound=true;
+	SECOND_CMD="scp -r"
+	FIRST_LOGIN=$USER'@'$HOST
+	FIRST_PATH=$REMOTEDIR''$EXTRA_PATH
+	FIRST_PASSWORD=$PASS
+	FIRST_PROMPT=$PROMPT
+	# GET DETAILS OF SECOND ALIAS IF FIRST ONE WAS FOUND
+	setConfig $SECOND_ALIAS
+	if [ $ALIASFOUND = true ]; then
+		secondFound=true;
+		SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
+		SECOND_PASSWORD=$PASS
 
-setConfig $SECOND_ALIAS
-SECOND_PATH=$USER'@'$HOST':'$REMOTEDIR''$SECOND_EXTRA_PATH
-SECOND_PASSWORD=$PASS
-SECOND_PROMPT=$PROMPT
+		echo ""
+		echo $SECOND_CMD
+		echo $FIRST_PATH
+		echo $SECOND_PATH
 
-# EXECUTE EXPECT COMMAND
-$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS $SECOND_CMD
+		# EXECUTE EXPECT COMMAND
+		#$HOME/.sshutil/ssh.exp ssh $USER@$HOST $PROMPT cd\ $REMOTEDIR $PASS $SECOND_CMD
+	else
+		echo "Second alias "$ALIAS" not found"
+	fi
+else
+	echo "First alias "$ALIAS" not found"
+fi
 
-echo ""
-echo $COPY_CMD
-echo $FIRST_PASSWORD
-echo $SECOND_PASSWORD
-echo $FIRST_PROMPT
-echo $SECOND_PROMPT
-#expect -c "spawn ssh $FIRST_LOGIN; expect -re {.*assword.*|.*assphrase.*}; send -- {$FIRST_PASSWORD}; send -- \"\r\"; expect -re {.*$FIRST_PROMPT.*}; $COPY_CMD $FIRST_PATH $SECOND_PATH; expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; expect;"
-#expect -c "$COPY_CMD $FIRST_PATH $SECOND_PATH;  expect -re {.*assword.*|.*assphrase.*}; send -- {$SECOND_PASSWORD}; send -- \"\r\"; interact;"
 }
 # copy END 
 
