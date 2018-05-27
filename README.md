@@ -11,6 +11,8 @@ It also allows for a remote folder to be set. Once logged in, the script will ex
 
 There are two things: the main script "sshutil"; the config file "$HOME/.sshutil/config". The config file should be placed in the home directory under the aforementioned path. The script itself can be placed anywhere.
 
+**Note:** To have the script placed somewhere other than `$HOME/.sshutil/config`, set an environment variable of `$SSHUTIL_DIR` with a string of the new path used for the script.
+
 ### Execute Command
 Connect to alias:
 ~~~~
